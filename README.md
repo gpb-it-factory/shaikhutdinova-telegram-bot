@@ -61,7 +61,7 @@
 5. Отправьте изменения на ветку (`git push origin feature/improvement`).
 6. Создайте новый Pull Request.
 
-### Лицензия
+### Лицензия:
 Этот проект распространяется под лицензией [Vaganoff License](LICENSE). Смотрите файл [LICENSE](LICENSE) для деталей.
 
 ```plantuml
