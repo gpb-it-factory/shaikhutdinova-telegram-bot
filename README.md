@@ -1,90 +1,78 @@
-### Описание
-Этот Telegram бот, "Shaikhutinova Telegram Bot", создан для автоматизации различных задач и облегчения повседневной жизни пользователей. Бот предоставляет широкий спектр функциональности, включая управление задачами, напоминания, доступ к информации из различных источников, конвертацию валюты, а также возможность получения случайных фактов или цитат для развлечения и вдохновения.
 
-### Установка
-Для установки и запуска бота выполните следующие шаги:
+# Телеграм бот "Мини - Банк"
 
-1. **Клонирование репозитория:**
-    ```bash
-    git clone https://github.com/your_username/shaikhutinova-telegram-bot.git
-    cd shaikhutinova-telegram-bot
-    ```
+##  Описание
+*Данный бот выполняет функциональность "Мини-банка" и разработан в рамках практических задач   школы GPB-IT-FACTORY.*
 
-2. **Установка зависимостей:**
-    ```bash
-    pip install -r requirements.txt
-    ```
+## Содержание
 
-3. **Настройка токена Telegram бота:**
-    - Получите токен Telegram бота от [BotFather](https://t.me/BotFather)
-    - Создайте файл с именем `.env` в корневом каталоге проекта
-    - Добавьте свой токен в файл `.env`:
-      ```
-      TELEGRAM_TOKEN=ваш_токен_бота
-      ```
 
-4. **Запуск бота:**
-    ```bash
-    python bot.py
-    ```
+Архитектура бота состоит **из трех** компонентов:
 
-### Использование
-После запуска бота вы сможете взаимодействовать с ним через свой аккаунт Telegram. Доступны следующие команды:
+1. *frontend (telegram-bot на java/kotlin);*
+2. *middle-слой (java/kotlin-сервис);*
+3. *backend (java/kotlin-сервис).*
 
-- `/tasks`: Получить список текущих задач.
-- `/remind`: Настроить напоминание.
-- `/currency`: Конвертировать валюту.
-- `/fact`: Получить случайный факт или цитату.
+##  Технологии
+:small_orange_diamond: Раздел находится в разработке и будет обогащен после  
+получения ТЗ.
 
-Вы также можете взаимодействовать с ботом, задавая ему вопросы или использовать его функции для управления задачами и напоминаниями.
+[JDK Development Kit](https://www.oracle.com/java/technologies/downloads/)
+[Gradle](https://gradle.org/install/)
+[Docker](https://www.docker.com/products/docker-desktop/)
 
-### Примеры
-Вот несколько примеров использования этого бота:
 
-1. **Получение списка задач:**
-    ```bash
-    /tasks
-    ```
+## Установка
 
-2. **Настройка напоминания:**
-    ```bash
-    /remind 10:00 Заголовок напоминания Текст напоминания
-    ```
+:small_orange_diamond: Раздел находится в разработке и будет обогащен после  
+получения ТЗ.
 
-### Вклад в развитие
-Приглашаем к участию в разработке! Следуйте этим шагам для внесения своего вклада:
+## Использование
+:small_orange_diamond: Раздел находится в разработке и будет обогащен после  
+получения ТЗ.
 
-1. Сделайте форк репозитория.
-2. Создайте новую ветку (`git checkout -b feature/improvement`).
-3. Внесите свои изменения.
-4. Зафиксируйте изменения (`git commit -am 'Добавлено новое функциональное требование'`).
-5. Отправьте изменения на ветку (`git push origin feature/improvement`).
-6. Создайте новый Pull Request.
+## Разработка
 
-### Лицензия:
-Этот проект распространяется под лицензией [Vaganoff License](LICENSE). Смотрите файл [LICENSE](LICENSE) для деталей.
+###  Требования
 
-```plantuml
+Для установки и запуска проекта потребуется:
+[JDK Development Kit](https://www.oracle.com/java/technologies/downloads/)
 
-@startuml
+###  Установка зависимостей
+:small_orange_diamond: Раздел находится в разработке и будет обогащен после  
+получения ТЗ.  
+$ npm i
 
-actor User
-participant "Client Device" as Client
-participant "Server" as Server
-participant "Telegram Bot" as Bot
-database "Database" as DB
+## Тестирование
 
-User -> Client: Interacts
-Client -> Bot: Sends message
-Bot -> Server: Processes message
-Server -> Bot: Returns response
-Bot -> Client: Sends response
-Client -> User: Receives response
-Bot -> DB: Queries data
-DB --> Bot: Returns data
+Тут будет информация, какие инструменты тестирования использованы в проекте и как их запускать. Например:
 
+Наш проект покрыт юнит-тестами JUnit
+
+## Контакты
+По всем вопросам, касающихся данного проекта Вы можете обратиться по на почту **@gu_code@mail.ru**
+
+## FAQ
+
+Часто задаваемые вопросы и ответы на них будут представлены в этом блоке
+
+## Диаграмма последовательности
+
+Данная диаграмма описывает взаимодействие компонентов бота "Мини-банк".
+
+```plantuml  
+@startuml  
+  
+actor User  
+participant "Client Device" as Client  
+participant "Telegram Bot" as Bot  
+participant "Server" as Server  
+  
+User -> Client: Interacts  
+Client -> Bot: Sends message  
+Bot -> Server: Processes message  
+Server -> Bot: Returns response  
+Bot -> Client: Sends response  
+Client -> User: Receives response  
+  
 @enduml
-
-
-
-
