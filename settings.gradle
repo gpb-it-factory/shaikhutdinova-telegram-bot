@@ -1,2 +1,5 @@
 rootProject.name = 'shaikhutdinova-telegram-bot'
+include 'bot'
+include 'telegrambot'
+include 'core'
 

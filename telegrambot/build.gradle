@@ -12,6 +12,5 @@ repositories {
 dependencies {
     implementation project(":core")
     implementation project(":bot")
-    implementation project(":telegrambot")
     implementation 'com.github.pengrad:java-telegram-bot-api:7.1.0'
 }
