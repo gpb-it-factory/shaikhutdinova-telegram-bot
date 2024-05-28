@@ -4,21 +4,21 @@ import userEvent.StickerEvent;
 
 class StickerEventImpl implements StickerEvent {
 
-    private final String file_id;
+    private final String fileId;
     private final Integer width;
     private final Integer height;
-    private final Boolean is_animated;
+    private final Boolean isAnimated;
     private final Long userId;
     private final String firstName;
     private final String lastName;
     private final String type;
     private final Long chatId;
 
-    public StickerEventImpl(String file_id, Integer width, Integer height, Boolean is_animated, Long userId, String firstName, String lastName, String type, Long chatId) {
-        this.file_id = file_id;
+    public StickerEventImpl(String fileId, Integer width, Integer height, Boolean isAnimated, Long userId, String firstName, String lastName, String type, Long chatId) {
+        this.fileId = fileId;
         this.width = width;
         this.height = height;
-        this.is_animated = is_animated;
+        this.isAnimated = isAnimated;
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -27,7 +27,7 @@ class StickerEventImpl implements StickerEvent {
     }
 
     public String getFile_id() {
-        return file_id;
+        return fileId;
     }
 
     public Integer getWidth() {
@@ -39,7 +39,7 @@ class StickerEventImpl implements StickerEvent {
     }
 
     public Boolean getIs_animated() {
-        return is_animated;
+        return isAnimated;
     }
 
     @Override

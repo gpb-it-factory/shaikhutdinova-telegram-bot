@@ -2,6 +2,7 @@ package factory;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import receive.EventCallback;
 import receive.EventSubscriber;
@@ -9,7 +10,7 @@ import userEvent.Event;
 
 import java.util.List;
 
- class TelegramEventReceiver implements EventSubscriber<Event> {
+class TelegramEventReceiver implements EventSubscriber<Event> {
 
     private final TelegramBot telegramBot;
 
@@ -26,12 +27,29 @@ import java.util.List;
             public int process(List<Update> updates) {
 
                 for (Update update : updates) {
-                    if (update.message() != null) {
-                        if (update.message().text() != null) {
-                            Event messageEvent = new MessageEventImpl(update.message().text(), update.message().from().firstName(), update.message().from().lastName(), update.message().from().id(), update.message().chat().id());
+                    Message message = update.message();
+                    if (message != null) {
+                        if (message.text() != null) {
+                            Event messageEvent = new MessageEventImpl(
+                                    message.text(),
+                                    message.from().firstName(),
+                                    message.from().lastName(),
+                                    message.from().id(),
+                                    message.chat().id()
+                            );
                             callback.onNewEvent(messageEvent);
-                        } else if (update.message().sticker() != null) {
-                            Event stickerEvent = new StickerEventImpl(update.message().sticker().fileId(), update.message().sticker().width(), update.message().sticker().height(), update.message().sticker().isAnimated(), update.message().from().id(), update.message().from().firstName(), update.message().from().lastName(), update.message().sticker().type().toString(), update.message().chat().id());
+                        } else if (message.sticker() != null) {
+                            Event stickerEvent = new StickerEventImpl(
+                                    message.sticker().fileId(),
+                                    message.sticker().width(),
+                                    message.sticker().height(),
+                                    message.sticker().isAnimated(),
+                                    message.from().id(),
+                                    message.from().firstName(),
+                                    message.from().lastName(),
+                                    message.sticker().type().toString(),
+                                    message.chat().id()
+                            );
                             callback.onNewEvent(stickerEvent);
                         }
                     }
