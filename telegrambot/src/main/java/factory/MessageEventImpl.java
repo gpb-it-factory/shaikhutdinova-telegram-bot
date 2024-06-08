@@ -8,12 +8,14 @@ class MessageEventImpl implements MessageEvent {
     private String lastName;
     private final Long userId;
     private final Long chatId;
+    private final String userName;
 
-    public MessageEventImpl(String message, String firstName, String lastName, Long userId, Long chatId) {
+    public MessageEventImpl(String message, String firstName, String lastName, Long userId, Long chatId, String userName) {
         this.message = message;
         this.userId = userId;
         this.firstName = firstName;
         this.chatId = chatId;
+        this.userName = userName;
 
     }
 
@@ -43,6 +45,11 @@ class MessageEventImpl implements MessageEvent {
     }
 
     @Override
+    public String getUserName() {
+        return userName;
+    }
+
+    @Override
     public String toString() {
         return "MessageEventImpl{" +
                 "message='" + message + '\'' +
@@ -50,6 +57,7 @@ class MessageEventImpl implements MessageEvent {
                 ", lastName='" + lastName + '\'' +
                 ", userId=" + userId +
                 ", chatId=" + chatId +
+                ", userName='" + userName + '\'' +
                 '}';
     }
 }

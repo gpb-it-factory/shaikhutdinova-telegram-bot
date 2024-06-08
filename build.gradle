@@ -7,11 +7,16 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    flatDir {
+        dirs("libs")
+    }
 }
 
 dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(":core")
     implementation project(":bot")
     implementation project(":telegrambot")
     implementation 'com.github.pengrad:java-telegram-bot-api:7.1.0'
+    implementation files('src/libs/shaikhutdinova-middle-service-1.0.1.jar')
 }
