@@ -18,5 +18,7 @@ dependencies {
     implementation project(":bot")
     implementation project(":telegrambot")
     implementation 'com.github.pengrad:java-telegram-bot-api:7.1.0'
-    implementation files('src/libs/shaikhutdinova-middle-service-1.0.1.jar')
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 }

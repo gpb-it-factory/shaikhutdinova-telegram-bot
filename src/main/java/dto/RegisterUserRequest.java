@@ -1,10 +1,10 @@
-package model;
+package dto;
 
-public class RegisterUserDto {
-    private Long userId;
+public class RegisterUserRequest {
+    private long userId;
     private String userName;
 
-    public RegisterUserDto(Long userId, String userName) {
+    public RegisterUserRequest(Long userId, String userName) {
         this.userId = userId;
         this.userName = userName;
     }

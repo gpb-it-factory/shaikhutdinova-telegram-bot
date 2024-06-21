@@ -11,11 +11,6 @@ class TelegramCommandFactory extends CommandFactory {
     }
 
     @Override
-    public Command getSendImageCommand(long chatId, String photo, String caption, String selfText) {
-        return new SendImageCommand(telegramBot, chatId, photo, caption, selfText);
-    }
-
-    @Override
     public Command getSendMessageCommand(long chatId, String message) {
         return new SendMessageCommand(telegramBot, chatId, message);
     }
