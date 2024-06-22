@@ -1,6 +1,9 @@
 package api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dto.CreateAccountRequest;
+import dto.CreateAccountResponse;
+import exceptions.AccountExistException;
 import exceptions.UserExistException;
 import dto.RegisterUserRequest;
 import dto.RegisterUserResponse;
@@ -43,5 +46,32 @@ public class MiddleApiClient {
         System.out.println("Parsed response: " + registerUserResponse.toString());
 
         return registerUserResponse;
+    }
+
+    public CreateAccountResponse createAccount(CreateAccountRequest createAccountRequest) throws Exception {
+        String body = objectMapper.writeValueAsString(createAccountRequest);
+        System.out.println("Request body " + body);
+
+        Request request = new Request.Builder()
+                .url("http://localhost:8080/api/v2/users/" + createAccountRequest.getUserId() + "/accounts")
+                .post(RequestBody.create(body, JSON))
+                .build();
+
+        Response response = client.newCall(request).execute();
+        String bodyString = response.body().string();
+        System.out.println("Response body: " + bodyString); // Логирование тела ответа
+
+        if (!response.isSuccessful()) {
+            if (response.code() == 409) {
+                throw new AccountExistException("Conflict: Account already exists.");
+            } else {
+                throw new Exception("Unexpected code " + response.code() + ": " + bodyString);
+            }
+        }
+
+        CreateAccountResponse createAccountResponse = objectMapper.readValue(bodyString, CreateAccountResponse.class);
+        System.out.println("Parsed response: " + createAccountResponse.toString());
+        return createAccountResponse;
+
     }
 }
