@@ -1,5 +1,5 @@
 package receive;
 
 public interface EventCallback <T> {
-    void onNewEvent(T event);
+    void onNewEvent(T event) throws Exception;
 }
