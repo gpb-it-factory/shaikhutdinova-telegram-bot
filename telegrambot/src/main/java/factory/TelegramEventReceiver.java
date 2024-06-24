@@ -38,11 +38,7 @@ class TelegramEventReceiver implements EventSubscriber<Event> {
                                     message.chat().id(),
                                     message.from().username()
                             );
-                            try {
-                                callback.onNewEvent(messageEvent);
-                            } catch (Exception e) {
-                                throw new RuntimeException(e);
-                            }
+                            callback.onNewEvent(messageEvent);
                         } else if (message.sticker() != null) {
                             Event stickerEvent = new StickerEventImpl(
                                     message.sticker().fileId(),
@@ -56,11 +52,7 @@ class TelegramEventReceiver implements EventSubscriber<Event> {
                                     message.chat().id(),
                                     message.from().username()
                             );
-                            try {
-                                callback.onNewEvent(stickerEvent);
-                            } catch (Exception e) {
-                                throw new RuntimeException(e);
-                            }
+                            callback.onNewEvent(stickerEvent);
                         }
                     }
                 }

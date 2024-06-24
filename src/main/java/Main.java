@@ -1,4 +1,5 @@
 import bot.Bot;
+import controller.UserController;
 import factory.BotCreator;
 import controller.BotController;
 
