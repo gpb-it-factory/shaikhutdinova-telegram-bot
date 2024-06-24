@@ -7,11 +7,18 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    flatDir {
+        dirs("libs")
+    }
 }
 
 dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(":core")
     implementation project(":bot")
     implementation project(":telegrambot")
     implementation 'com.github.pengrad:java-telegram-bot-api:7.1.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 }

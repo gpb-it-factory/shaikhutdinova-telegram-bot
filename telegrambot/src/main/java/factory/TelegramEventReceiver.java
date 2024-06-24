@@ -35,7 +35,8 @@ class TelegramEventReceiver implements EventSubscriber<Event> {
                                     message.from().firstName(),
                                     message.from().lastName(),
                                     message.from().id(),
-                                    message.chat().id()
+                                    message.chat().id(),
+                                    message.from().username()
                             );
                             try {
                                 callback.onNewEvent(messageEvent);
@@ -52,7 +53,8 @@ class TelegramEventReceiver implements EventSubscriber<Event> {
                                     message.from().firstName(),
                                     message.from().lastName(),
                                     message.sticker().type().toString(),
-                                    message.chat().id()
+                                    message.chat().id(),
+                                    message.from().username()
                             );
                             try {
                                 callback.onNewEvent(stickerEvent);

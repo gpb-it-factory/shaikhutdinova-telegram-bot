@@ -5,4 +5,5 @@ public interface Event {
     String getFirstName();
     String getLastName();
     Long getChatId();
+    String getUserName();
 }

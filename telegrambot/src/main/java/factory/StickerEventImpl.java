@@ -13,8 +13,9 @@ class StickerEventImpl implements StickerEvent {
     private final String lastName;
     private final String type;
     private final Long chatId;
+    private final String userName;
 
-    public StickerEventImpl(String fileId, Integer width, Integer height, Boolean isAnimated, Long userId, String firstName, String lastName, String type, Long chatId) {
+    public StickerEventImpl(String fileId, Integer width, Integer height, Boolean isAnimated, Long userId, String firstName, String lastName, String type, Long chatId, String userName) {
         this.fileId = fileId;
         this.width = width;
         this.height = height;
@@ -24,6 +25,7 @@ class StickerEventImpl implements StickerEvent {
         this.lastName = lastName;
         this.type = type;
         this.chatId = chatId;
+        this.userName = userName;
     }
 
     public String getFile_id() {
@@ -66,4 +68,8 @@ class StickerEventImpl implements StickerEvent {
         return type;
     }
 
+    @Override
+    public String getUserName() {
+        return userName;
+    }
 }
