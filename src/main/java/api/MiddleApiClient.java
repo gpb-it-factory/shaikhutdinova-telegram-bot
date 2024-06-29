@@ -69,6 +69,7 @@ public class MiddleApiClient {
             }
         }
 
+        ObjectMapper objectMapper = new ObjectMapper();
         CreateAccountResponse createAccountResponse = objectMapper.readValue(bodyString, CreateAccountResponse.class);
         System.out.println("Parsed response: " + createAccountResponse.toString());
         return createAccountResponse;

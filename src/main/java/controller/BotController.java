@@ -87,6 +87,7 @@ public class BotController {
         } catch (AccountExistException e) {
             sendAccountExistMessage(event.getChatId());
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Ошибка создания счета. Повторите запрос позже");
         }
     }
