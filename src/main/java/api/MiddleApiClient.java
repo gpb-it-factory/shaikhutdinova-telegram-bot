@@ -93,9 +93,9 @@ public class MiddleApiClient {
 
         if (!response.isSuccessful()) {
             switch (response.code()) {
-                case 404:
+                case 403:
                     throw new UserNotFoundException("User not found: User ID " + getCurrentBalanceRequest.getUserId());
-                case 409:
+                case 404:
                     throw new NoAccountFoundException("No accounts found for user ID " + getCurrentBalanceRequest.getUserId());
                 default:
                     throw new Exception("Unexpected code " + response.code() + ": " + bodyString);
