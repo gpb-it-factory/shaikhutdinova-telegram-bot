@@ -1,14 +1,16 @@
 package api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dto.CreateAccountRequest;
-import dto.CreateAccountResponse;
+import dto.*;
 import exceptions.AccountExistException;
+import exceptions.NoAccountFoundException;
 import exceptions.UserExistException;
-import dto.RegisterUserRequest;
-import dto.RegisterUserResponse;
+import exceptions.UserNotFoundException;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
+
+import java.io.IOException;
 
 public class MiddleApiClient {
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
@@ -75,4 +77,34 @@ public class MiddleApiClient {
         return createAccountResponse;
 
     }
+
+    public GetCurrentBalanceResponse getCurrentBalance(GetCurrentBalanceRequest getCurrentBalanceRequest) throws Exception {
+        // Логирование тела запроса
+        System.out.println("Request for user ID: " + getCurrentBalanceRequest.getUserId());
+
+        Request request = new Request.Builder()
+                .url("http://localhost:8080/api/v2/users/" + getCurrentBalanceRequest.getUserId() + "/accounts/balance")
+                .get()
+                .build();
+
+        Response response = client.newCall(request).execute();
+        String bodyString = response.body().string();
+        System.out.println("Response body: " + bodyString); // Логирование тела ответа
+
+        if (!response.isSuccessful()) {
+            switch (response.code()) {
+                case 404:
+                    throw new UserNotFoundException("User not found: User ID " + getCurrentBalanceRequest.getUserId());
+                case 409:
+                    throw new NoAccountFoundException("No accounts found for user ID " + getCurrentBalanceRequest.getUserId());
+                default:
+                    throw new Exception("Unexpected code " + response.code() + ": " + bodyString);
+            }
+        }
+
+        GetCurrentBalanceResponse getCurrentBalanceResponse = objectMapper.readValue(bodyString, GetCurrentBalanceResponse.class);
+        System.out.println("Parsed response: " + getCurrentBalanceResponse.toString());
+        return getCurrentBalanceResponse;
+    }
+
 }

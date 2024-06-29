@@ -3,6 +3,7 @@ package dto;
 public enum UserCommand {
     REGISTER("/register"),
     CREATEACCOUNT("/createaccount"),
+    CURRENTBALANCE ("/currentbalance"),
     UNKNOWN("unknown"); // Предположим, что у вас есть неизвестная команда
 
     private final String command;
