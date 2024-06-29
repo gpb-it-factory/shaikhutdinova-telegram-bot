@@ -20,9 +20,20 @@ class BotImpl implements Bot {
         commandFactory.getSendMessageCommand(chatId, message).execute(callback);
     }
 
+    //синхронный вариант вызова [sendMessage]
     @Override
-    public void sendImage(long chatId, String photo, String caption, String selfText, Callback callback) {
-        commandFactory.getSendImageCommand(chatId, photo, caption, selfText).execute(callback);
+    public void sendMessage(long chatId, String message) {
+        commandFactory.getSendMessageCommand(chatId, message).execute(new Callback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override

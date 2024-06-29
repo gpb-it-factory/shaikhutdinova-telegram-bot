@@ -8,7 +8,7 @@ public interface Bot {
 
     void sendMessage(long chatId, String message, Callback callback);
 
-    void sendImage(long chatId, String photo, String caption, String selfText, Callback callback);
+    void sendMessage(long chatId, String message);
 
     void subscribeToNewEvents(EventCallback<Event> callback);
 }
