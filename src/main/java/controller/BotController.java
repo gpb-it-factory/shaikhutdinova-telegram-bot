@@ -11,7 +11,6 @@ import receive.EventCallback;
 import userEvent.Event;
 import userEvent.MessageEvent;
 
-import java.util.HashMap;
 
 public class BotController {
     Bot telegramBot;
@@ -42,6 +41,8 @@ public class BotController {
                 }
                 case CREATEACCOUNT -> {
                     startCreateAccount(event);
+                }case CURRENTBALANCE -> {
+                    startGetBalance(event);
                 }
                 case UNKNOWN -> { //todo
                     System.out.println("test");
@@ -62,8 +63,8 @@ public class BotController {
         telegramBot.sendMessage(chatId, "Счет уже создан");
     }
 
-    private void successGetCurrentBalance(Long chatId) {
-        telegramBot.sendMessage(chatId, "Отправлены данные по вашим счетам");
+    private void successGetCurrentBalance(Long chatId, GetCurrentBalanceResponse response) {
+        telegramBot.sendMessage(chatId, "Баланс вашего счета " + response.getAccountName() + " составляет " + response.getBalance() + " рублей.");
     }
 
     private void sendUserNotFoundException(Long chatId) {
@@ -102,19 +103,16 @@ public class BotController {
     }
 
     private void startGetBalance(Event event) throws Exception {
-
         try {
-            middleApiClient.getCurrentBalance(new GetCurrentBalanceRequest(event.getUserId()));
-            successGetCurrentBalance(event.getChatId());
+            GetCurrentBalanceResponse response = middleApiClient.getCurrentBalance(new GetCurrentBalanceRequest(event.getUserId()));
+            successGetCurrentBalance(event.getChatId(), response);
         } catch (UserNotFoundException e) {
             sendUserNotFoundException(event.getChatId());
-
         } catch (NoAccountFoundException e) {
             sendAccountNotFoundException(event.getChatId());
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Ошибка получения  баланса. Повторите запрос позже");
+            System.out.println("Ошибка получения баланса. Повторите запрос позже");
         }
-
     }
 }

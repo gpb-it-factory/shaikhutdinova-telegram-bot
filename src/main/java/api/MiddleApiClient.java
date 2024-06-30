@@ -83,7 +83,7 @@ public class MiddleApiClient {
         System.out.println("Request for user ID: " + getCurrentBalanceRequest.getUserId());
 
         Request request = new Request.Builder()
-                .url("http://localhost:8080/api/v2/users/" + getCurrentBalanceRequest.getUserId() + "/accounts/balance")
+                .url("http://localhost:8080/api/v2/users/" + getCurrentBalanceRequest.getUserId() + "/accounts")
                 .get()
                 .build();
 

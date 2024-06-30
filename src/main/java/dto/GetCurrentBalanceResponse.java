@@ -11,6 +11,9 @@ public class GetCurrentBalanceResponse {
         this.balance = balance;
     }
 
+    public GetCurrentBalanceResponse() {
+    }
+
     public long getAccountId() {
         return accountId;
     }
