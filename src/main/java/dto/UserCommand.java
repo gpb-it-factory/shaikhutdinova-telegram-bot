@@ -4,7 +4,8 @@ public enum UserCommand {
     REGISTER("/register"),
     CREATEACCOUNT("/createaccount"),
     CURRENTBALANCE ("/currentbalance"),
-    UNKNOWN("unknown"); // Предположим, что у вас есть неизвестная команда
+    TRANSFER ("/transfer"),
+    UNKNOWN("unknown");
 
     private final String command;
 

@@ -3,10 +3,7 @@ package api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.*;
-import exceptions.AccountExistException;
-import exceptions.NoAccountFoundException;
-import exceptions.UserExistException;
-import exceptions.UserNotFoundException;
+import exceptions.*;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
 
@@ -105,6 +102,47 @@ public class MiddleApiClient {
         GetCurrentBalanceResponse getCurrentBalanceResponse = objectMapper.readValue(bodyString, GetCurrentBalanceResponse.class);
         System.out.println("Parsed response: " + getCurrentBalanceResponse.toString());
         return getCurrentBalanceResponse;
+    }
+
+    public TransferResponse createTransfer(CreateTransferRequest createTransferRequest) throws IOException, NoAccountFoundException, UserNotFoundException, InsufficientFundsException {
+        String body = objectMapper.writeValueAsString(createTransferRequest);
+        System.out.println("Request body: " + body);
+
+        Request request = new Request.Builder()
+                .url("http://localhost:8080/api/v2/transfers/")
+                .post(RequestBody.create(body, JSON))
+                .build();
+
+        Response response = client.newCall(request).execute();
+        String bodyString = response.body().string();
+        System.out.println("Response body: " + bodyString); // Логирование тела ответа
+
+        if (!response.isSuccessful()) {
+            switch (response.code()) {
+                case 403:
+                    if (bodyString.contains("User not found")) {
+                        throw new UserNotFoundException("User not found: " + createTransferRequest.getFrom());
+                    } else if (bodyString.contains("Recipient user not found")) {
+                        throw new UserNotFoundException("Recipient user not found: " + createTransferRequest.getTo());
+                    }
+                    break;
+                case 404:
+                    if (bodyString.contains("No account found for user")) {
+                        throw new NoAccountFoundException("No account found for user: " + createTransferRequest.getFrom());
+                    } else if (bodyString.contains("No account found for recipient user")) {
+                        throw new NoAccountFoundException("No account found for recipient user: " + createTransferRequest.getTo());
+                    }
+                    break;
+                case 400:
+                    throw new InsufficientFundsException("Insufficient funds for user: " + createTransferRequest.getFrom());
+                default:
+                    throw new IOException("Unexpected code " + response.code() + ": " + bodyString);
+            }
+        }
+
+        TransferResponse transferResponse = objectMapper.readValue(bodyString, TransferResponse.class);
+        System.out.println("Parsed response: " + transferResponse.toString());
+        return transferResponse;
     }
 
 }

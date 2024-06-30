@@ -11,11 +11,14 @@ import receive.EventCallback;
 import userEvent.Event;
 import userEvent.MessageEvent;
 
+import java.util.HashMap;
+
 
 public class BotController {
     Bot telegramBot;
     private final MiddleApiClient middleApiClient = new MiddleApiClient();
     private final CommandHandler handler = new CommandHandler();
+    private final HashMap<Long, CreateTransferRequest> currentUserTransactions = new HashMap<>();
 
     public BotController(Bot telegramBot) {
         this.telegramBot = telegramBot;
@@ -41,11 +44,15 @@ public class BotController {
                 }
                 case CREATEACCOUNT -> {
                     startCreateAccount(event);
-                }case CURRENTBALANCE -> {
+                }
+                case CURRENTBALANCE -> {
                     startGetBalance(event);
                 }
-                case UNKNOWN -> { //todo
-                    System.out.println("test");
+                case TRANSFER -> {
+                    startTransfer((MessageEvent) event);
+                }
+                case UNKNOWN -> {
+                    tryHandleUserTransaction((MessageEvent) event);
                 }
             }
         }
@@ -67,12 +74,20 @@ public class BotController {
         telegramBot.sendMessage(chatId, "Баланс вашего счета " + response.getAccountName() + " составляет " + response.getBalance() + " рублей.");
     }
 
+    private void successTransfer(Long chatId, TransferResponse response) {
+        telegramBot.sendMessage(chatId, "Перевод осуществлен");
+    }
+
     private void sendUserNotFoundException(Long chatId) {
         telegramBot.sendMessage(chatId, "Невозможно предоставить информацию по вашему балансу. Так как вы не зарегистрированы!");
     }
 
     private void sendAccountNotFoundException(Long chatId) {
         telegramBot.sendMessage(chatId, "Cчета не найдены");
+    }
+
+    private void sendUserExistMessage(Long chatId) {
+        telegramBot.sendMessage(chatId, "Пользователь уже существует");
     }
 
     private void startRegistration(Event event) {
@@ -84,10 +99,6 @@ public class BotController {
         } catch (Exception e) {
             System.out.println("Ошибка регистрации. Повторите запрос позже");
         }
-    }
-
-    private void sendUserExistMessage(Long chatId) {
-        telegramBot.sendMessage(chatId, "Пользователь уже существует");
     }
 
     private void startCreateAccount(Event event) throws Exception {
@@ -115,4 +126,72 @@ public class BotController {
             System.out.println("Ошибка получения баланса. Повторите запрос позже");
         }
     }
+
+    private void startTransfer(MessageEvent event) {
+        String message = "Введите имя получателя и сумму перевода в формате: to: alice, amount: 100.50";
+        telegramBot.sendMessage(event.getChatId(), message);
+        CreateTransferRequest request = new CreateTransferRequest();
+        request.setFrom(event.getUserName());
+        currentUserTransactions.put(event.getUserId(), request);
+    }
+
+    private void processNextUserInput(MessageEvent event) {
+        try {
+            CreateTransferRequest request = currentUserTransactions.get(event.getUserId());
+            if (request == null) {
+                throw new NullPointerException("Запрос не найден");
+            }
+            TransferResponse response = middleApiClient.createTransfer(request);
+            successTransfer(event.getChatId(), response);
+        } catch (UserNotFoundException e) {
+            sendUserNotFoundException(event.getChatId());
+        } catch (NoAccountFoundException e) {
+            sendAccountNotFoundException(event.getChatId());
+        } catch (Exception e) {
+            e.printStackTrace();
+//            sendError(event.getChatId(), "Ошибка выполнения перевода. Повторите запрос позже.");
+        }
+    }
+
+    private void tryHandleUserTransaction(MessageEvent event) {
+        CreateTransferRequest request = getUserTransaction(event.getUserId());
+        if (request != null) { // пользователь начал процесс транзакции
+            if (request.getFrom() == null) {
+                throw new IllegalStateException("Не задано имя пользователя отправителя");
+            }
+            String receiverUsername = getReceiverUsername(event.getMessage());
+            Double amount = getAmount(event.getMessage());
+            request.setTo(receiverUsername);
+            request.setAmount(amount);
+            currentUserTransactions.put(event.getUserId(), request);
+            processNextUserInput(event);
+            currentUserTransactions.remove(event.getUserId());
+        }
+    }
+
+    private CreateTransferRequest getUserTransaction(long userId) {
+        return currentUserTransactions.get(userId);
+    }
+
+    // парсим сообщение пользователя в формате username,123234 и возвращаем username
+    private String getReceiverUsername(String message) {
+        // Разделяем строку по запятой
+        String[] parts = message.trim().split(",");
+        // Получаем имя получателя
+        String userName = parts[0];
+        if (userName.isBlank()) {
+            throw new IllegalStateException("Не удалось спарсить сообщение " + message);
+        }
+        return userName;
+    }
+
+    // парсим сообщение пользователя в формате username,123234 и возвращаем amount
+    private Double getAmount(String message) {
+        // Разделяем строку по запятой
+        String[] parts = message.trim().split(",");
+        // Получаем имя получателя
+        String amountString = parts[1].trim();
+        return Double.parseDouble(amountString); // "amount: 100.50" -> 100.50
+    }
 }
+
