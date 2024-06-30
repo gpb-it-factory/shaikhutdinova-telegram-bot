@@ -1,20 +1,16 @@
 package controller;
 
 import bot.Bot;
-import com.pengrad.telegrambot.model.User;
-import common.Callback;
-import dto.CommandHandler;
-import dto.CreateAccountRequest;
-import dto.UserCommand;
+import dto.*;
 import exceptions.AccountExistException;
+import exceptions.NoAccountFoundException;
 import exceptions.UserExistException;
 import api.MiddleApiClient;
-import dto.RegisterUserRequest;
+import exceptions.UserNotFoundException;
 import receive.EventCallback;
 import userEvent.Event;
 import userEvent.MessageEvent;
 
-import java.util.HashMap;
 
 public class BotController {
     Bot telegramBot;
@@ -44,7 +40,9 @@ public class BotController {
                     startRegistration(event);
                 }
                 case CREATEACCOUNT -> {
-                   startCreateAccount(event);
+                    startCreateAccount(event);
+                }case CURRENTBALANCE -> {
+                    startGetBalance(event);
                 }
                 case UNKNOWN -> { //todo
                     System.out.println("test");
@@ -63,6 +61,18 @@ public class BotController {
 
     private void sendAccountExistMessage(Long chatId) {
         telegramBot.sendMessage(chatId, "Счет уже создан");
+    }
+
+    private void successGetCurrentBalance(Long chatId, GetCurrentBalanceResponse response) {
+        telegramBot.sendMessage(chatId, "Баланс вашего счета " + response.getAccountName() + " составляет " + response.getBalance() + " рублей.");
+    }
+
+    private void sendUserNotFoundException(Long chatId) {
+        telegramBot.sendMessage(chatId, "Невозможно предоставить информацию по вашему балансу. Так как вы не зарегистрированы!");
+    }
+
+    private void sendAccountNotFoundException(Long chatId) {
+        telegramBot.sendMessage(chatId, "Cчета не найдены");
     }
 
     private void startRegistration(Event event) {
@@ -89,6 +99,20 @@ public class BotController {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Ошибка создания счета. Повторите запрос позже");
+        }
+    }
+
+    private void startGetBalance(Event event) throws Exception {
+        try {
+            GetCurrentBalanceResponse response = middleApiClient.getCurrentBalance(new GetCurrentBalanceRequest(event.getUserId()));
+            successGetCurrentBalance(event.getChatId(), response);
+        } catch (UserNotFoundException e) {
+            sendUserNotFoundException(event.getChatId());
+        } catch (NoAccountFoundException e) {
+            sendAccountNotFoundException(event.getChatId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Ошибка получения баланса. Повторите запрос позже");
         }
     }
 }

@@ -1,9 +1,9 @@
 package exceptions;
 
-public class AccountExistException extends  Exception {
+public class NoAccountFoundException extends Exception{
     private  final String message;
 
-    public AccountExistException(String message) {
+    public NoAccountFoundException(String message) {
         super(message);
         this.message = message;
     }

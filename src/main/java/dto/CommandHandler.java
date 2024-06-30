@@ -1,7 +1,5 @@
 package dto;
 
-import com.pengrad.telegrambot.model.User;
-
 public class CommandHandler {
 
     public UserCommand parseCommand(String input) {
@@ -12,6 +10,9 @@ public class CommandHandler {
             }
             case "/createaccount" -> {
                  command = UserCommand.CREATEACCOUNT;
+            }
+            case "/currentbalance"->{
+                command=UserCommand.CURRENTBALANCE;
             }
             default ->  {
                 command = UserCommand.UNKNOWN;
