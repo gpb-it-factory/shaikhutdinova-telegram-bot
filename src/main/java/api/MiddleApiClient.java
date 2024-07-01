@@ -109,7 +109,7 @@ public class MiddleApiClient {
         System.out.println("Request body: " + body);
 
         Request request = new Request.Builder()
-                .url("http://localhost:8080/api/v2/transfers/")
+                .url("http://localhost:8080/api/v2/transfers")
                 .post(RequestBody.create(body, JSON))
                 .build();
 
