@@ -14,6 +14,9 @@ public class CommandHandler {
             case "/currentbalance"->{
                 command=UserCommand.CURRENTBALANCE;
             }
+             case "/transfer"->{
+                 command=UserCommand.TRANSFER;
+             }
             default ->  {
                 command = UserCommand.UNKNOWN;
             }
